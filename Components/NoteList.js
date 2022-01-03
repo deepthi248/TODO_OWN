@@ -1,6 +1,5 @@
 import React from 'react'
 import Note from './Note'
-import { uuid } from 'uuidv4'
 
 function NoteList(props) {
     const { notes } = props
@@ -13,7 +12,7 @@ function NoteList(props) {
         <div>
             {
 
-                notes.map((note) => {
+                notes.map((note, id) => {
                     console.log("inside the note list comp", id)
                     return (<Note note={note} key={id} addDeletehandler={getContactId} />)
 

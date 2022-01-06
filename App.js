@@ -1,47 +1,36 @@
 import './App.css';
 import Header from './Components/Header';
-import NoteList from './Components/NoteList';
-import { useState, useEffect } from 'react';
-import AddNote from './Components/AddNote';
-import Note from './Components/Note';
-import React from 'react'
-import { uuid } from 'uuidv4'
-
+import React, { useState, useEffect } from 'react'
+import AddNote from './Components/AddNote'
+import NoteList from './Components/NoteList'
 function App() {
-  const [notes, setNotes] = useState([])
-  //create a key 
-  const LOCAL_STORAGE_KEY = "NOTES"
-  //RETRIEVING THE DATA 
+  const [notes, setNotes] = useState(['a']); //empty array
+  const local_key = "notes"
+  const addNoteHandler = (note) => {
+    setNotes([...notes, note])
+  }
+  const addDeletHandler = (id_from) => {
+    console.log('inside app deletehandler', id_from)
+    const newList = notes.filter((note, id) => {
+      return id !== id_from
+    }
+    )
+    setNotes(newList)
+  }
   useEffect(() => {
-    setNotes(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)))
+    setNotes(JSON.parse(localStorage.getItem(local_key)))
   }, [])
 
   //using Local storage -- EVERY TIME WHEN A NOTE IS ADDED THEN THIS IS INVOKED 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(notes))
+    localStorage.setItem(local_key, JSON.stringify(notes))
   }, [notes])
 
-
-
-  const addDeletehandler = (id) => {
-    console.log("came inside delet in app ", id)
-    const newList = notes.filter((note) => { return note.id !== id })
-    setNotes(newList)
-  }
-
-  const addNoteHandler = (note) => {
-
-
-    console.log("this is note", note)
-
-    return setNotes([...notes, { id: uuid(), ...note }])
-
-  }
   return (
     <div className="App">
       <Header />
-      <AddNote addNoteHandler={addNoteHandler} />
-      <NoteList notes={notes} getContactId={addDeletehandler} />
+      <AddNote addNote={addNoteHandler} />
+      <NoteList Notes={notes} addDeletHandler={addDeletHandler} />
     </div>
   );
 }
